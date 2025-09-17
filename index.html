@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Hidden Iframe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Overlay styling */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #overlay video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures video scales perfectly for all resolutions */
+        }
+
+        /* Content styling */
+        #content {
+            visibility: hidden; /* Hidden initially, but iframe still loads */
+            opacity: 0;
+            height: 100%;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+            display: block;
+        }
+
+        .red-box {
+            background-color: #eaeaea;
+            width: 100%;
+            height: 55px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .hidden {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+
+        .powerbi-loading-spinner, 
+        .powerbi-loading-container,
+        .powerbi-brand-logo {
+            display: none !important;
+        }
+
+        video {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay with video -->
+    <div id="overlay">
+        <video id="overlayVideo" autoplay muted playsinline>
+            <source src="Boardroom AI- System and Capability Demo.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Main Content with Power BI Dashboard -->
+    <div id="content">
+        <iframe id="mainIframe" 
+            title="Delhi_Police_Boardroom_AI" 
+            src="https://app.fabric.microsoft.com/view?r=eyJrIjoiOGI0NmZiZmItM2ExZS00YzZkLWJiZmQtMTA0MWM0ZTE4ZGQ0IiwidCI6ImMxYzEwNzkxLTNhMzYtNDhjNy05OWZlLTdiOGUzNmJlZmZiMSJ9&pageName=6af7032dde61021cbe98"
+            frameborder="0" 
+            allowfullscreen="true">
+        </iframe>
+
+        <div id="bottomBox" class="red-box"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const overlay = document.getElementById('overlay');
+            const overlayVideo = document.getElementById('overlayVideo');
+            const content = document.getElementById('content');
+            const iframe = document.getElementById('mainIframe');
+
+            // Function to hide overlay after delay
+            function hideOverlayAfterDelay(delay) {
+                setTimeout(() => {
+                    overlay.style.display = 'none'; // Hide the overlay
+                    content.style.visibility = 'visible'; // Show the main content
+                    content.style.opacity = '1'; // Fade-in effect
+                }, delay);
+            }
+
+            // Adjust iframe and video for any screen resizing
+            function resizeHandler() {
+                overlayVideo.style.width = '100%';
+                overlayVideo.style.height = '100%';
+                iframe.style.width = '100%';
+                iframe.style.height = '100vh';
+            }
+
+            // Listen for window resize to handle responsiveness
+            window.addEventListener('resize', resizeHandler);
+
+            // Ensure the iframe starts loading and overlay hides after video
+            iframe.onload = function () {
+                hideOverlayAfterDelay(10000); // 10-second delay before hiding overlay
+            };
+
+            // Initial resize setup
+            resizeHandler();
+        });
+    </script>
+</body>
+</html>
